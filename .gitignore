@@ -2,9 +2,8 @@
 /out/
 compile_commands.json
 
-# Created by scripts/setup.sh (machine-specific SDK location)
+# Created by scripts/setup.sh (symlink into the connectedhomeip submodule)
 /build_overrides
-/third_party/connectedhomeip
 
 # Generated data model artifacts
 # NOTE: zap/*.matter is an input to codegen (not generated during the build),

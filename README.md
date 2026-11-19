@@ -1,9 +1,10 @@
 # DUWI Matter Bridge Core (dxh.matter.core.new)
 
 DUWI 智能家居 Matter 桥接器的正式工程骨架。工程以 **out-of-tree** 方式引用
-`connectedhomeip`（Matter SDK），不修改 SDK 源码；桥接器把 DUWI 智能设备以
-Matter 动态 endpoint 的形式暴露给 Apple Home、Google Home、Alexa、Home
-Assistant 等控制器。
+`connectedhomeip`（Matter SDK）：SDK 作为 git submodule 固定在
+`third_party/connectedhomeip`（fork 自 `lujunquan/connectedhomeip`），本工程
+不修改 SDK 源码；桥接器把 DUWI 智能设备以 Matter 动态 endpoint 的形式暴露给
+Apple Home、Google Home、Alexa、Home Assistant 等控制器。
 
 > 当前阶段：工程骨架 + 可运行的 Mock 适配器。
 > 与 DUWI 真实设备的通讯方式（MQTT / HTTP / BLE / 私有网关协议等）尚未确定，
@@ -70,6 +71,7 @@ Assistant 等控制器。
 ```
 dxh.matter.core.new/
 ├── .gn                     GN 根配置（工程根必须是本目录）
+├── .gitmodules             connectedhomeip 子模块定义（fork 地址 + 固定提交）
 ├── args.gni                Matter 构建参数（产品配置、动态 endpoint 等）
 ├── BUILD.gn                默认目标
 ├── config/
@@ -84,12 +86,14 @@ dxh.matter.core.new/
 │   ├── bridge/                 Matter 动态 endpoint / 属性访问 / 稳定 ID
 │   └── app/                    main + BridgeApplication（组合根）
 ├── scripts/
-│   ├── setup.sh            创建 SDK 软链接（含 --clean）
+│   ├── setup.sh            初始化 SDK 子模块 + 创建构建软链接（含 --clean）
 │   ├── build.sh            gn gen + ninja
 │   ├── run.sh              带开发默认参数运行
 │   ├── test.sh             不依赖 SDK 的宿主单测
 │   └── format.sh           clang-format
 ├── tests/test_core.cpp     纯 C++ 单测
+├── third_party/
+│   └── connectedhomeip     Matter SDK 子模块（lujunquan/connectedhomeip fork）
 ├── docs/
 │   ├── ARCHITECTURE.md
 │   ├── BUILD.md
@@ -104,12 +108,14 @@ dxh.matter.core.new/
 前置条件：
 
 - macOS（Apple Silicon / Intel）或 Linux x86_64/aarch64
-- 已初始化并可成功构建的 `connectedhomeip` 工作区
 - `git`、`python3`、`ninja`、`clang`（SDK 的 `activate.sh` 会提供 gn/ninja/zap）
 
+`connectedhomeip` 是 git submodule（指向
+`git@github.com:lujunquan/connectedhomeip.git`，固定在 `v1.6.1.0`）：
+
 ```bash
-# 1) 链接外部 SDK（默认 ../connectedhomeip）
-export MATTER_SDK_ROOT=/path/to/connectedhomeip   # 可选
+# 1) 初始化 SDK 子模块（首次会下载数 GB，包含 SDK 自身的子模块）
+git submodule update --init --recursive
 ./scripts/setup.sh
 
 # 2) 构建（首次会编译整套 Matter 库，耗时较长）
@@ -122,9 +128,10 @@ export MATTER_SDK_ROOT=/path/to/connectedhomeip   # 可选
 产物：`out/debug/dxh-matter-bridge`。
 
 `setup.sh` 会在 SDK 中创建一个未跟踪的软链接
-`connectedhomeip/examples/dxh-matter-core -> 本工程`。这是 GN 可见性规则的要求
-（详见 [docs/BUILD.md](docs/BUILD.md#gn-可见性说明)），可用
-`./scripts/setup.sh --clean` 移除。
+`third_party/connectedhomeip/examples/dxh-matter-core -> 本工程`。这是 GN
+可见性规则的要求（详见 [docs/BUILD.md](docs/BUILD.md#gn-可见性说明)），可用
+`./scripts/setup.sh --clean` 移除。首次 `git clone` 时若想一步到位，可用
+`git clone --recurse-submodules <repo-url>`。
 
 ---
 
@@ -133,7 +140,7 @@ export MATTER_SDK_ROOT=/path/to/connectedhomeip   # 可选
 先编译 chip-tool（只需一次）：
 
 ```bash
-cd connectedhomeip
+cd third_party/connectedhomeip
 scripts/run_in_build_env.sh \
   "./scripts/build/build_examples.py --target darwin-arm64-chip-tool-clang --quiet build"
 ```
@@ -141,7 +148,7 @@ scripts/run_in_build_env.sh \
 Linux 主机把 target 换成 `linux-x64-chip-tool-clang`。
 
 ```bash
-CT=/path/to/connectedhomeip/out/darwin-arm64-chip-tool-clang/chip-tool
+CT=third_party/connectedhomeip/out/darwin-arm64-chip-tool-clang/chip-tool
 
 $CT pairing onnetwork 1 20202021
 

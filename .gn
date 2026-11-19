@@ -3,9 +3,10 @@
 #
 # GN source root for the out-of-tree DUWI Matter Bridge.
 #
-# `build_overrides/` and `third_party/connectedhomeip` are symlinks created by
-# scripts/setup.sh. They resolve `build_root` and `chip_root` into the external,
-# read-only connectedhomeip checkout, so the SDK tree is never modified.
+# `third_party/connectedhomeip` is a git submodule (see .gitmodules) and
+# `build_overrides/` is a symlink created by scripts/setup.sh. Together they
+# resolve `build_root` and `chip_root` into the read-only connectedhomeip
+# checkout, so the SDK tree is never modified.
 
 import("//build_overrides/build.gni")
 

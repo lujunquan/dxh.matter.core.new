@@ -29,14 +29,14 @@
 1. 编辑 `dxh-bridge.zap`（推荐 ZAP GUI）：
 
    ```bash
-   ../connectedhomeip/scripts/tools/zap/run_zaptool.sh zap/dxh-bridge.zap
+   third_party/connectedhomeip/scripts/tools/zap/run_zaptool.sh zap/dxh-bridge.zap
    ```
 
 2. 重新生成 `.matter`：
 
    ```bash
-   ../connectedhomeip/scripts/run_in_build_env.sh \
-     "python3 ../connectedhomeip/scripts/tools/zap/generate.py \
+   third_party/connectedhomeip/scripts/run_in_build_env.sh \
+     "python3 third_party/connectedhomeip/scripts/tools/zap/generate.py \
       $(pwd)/zap/dxh-bridge.zap"
    ```
 
@@ -57,7 +57,8 @@
 - 当前数据模型**不包含 Actions**。如需房间/场景，在 endpoint 1 重新加入
   Actions cluster，并在 `src/bridge` 中实现 `Actions::Delegate`。
 - ZAP 文件中的 `package.path` 指向 `../third_party/connectedhomeip/src/app/zap-templates/...`，
-  依赖 `scripts/setup.sh` 创建的 SDK 软链接。移动工程或 SDK 后重新运行 setup。
+  依赖 `third_party/connectedhomeip` 子模块已初始化。切换分支或升级 SDK 后
+  重新运行 `./scripts/setup.sh` 与 `./scripts/build.sh --clean`。
 
 ## 常见问题
 

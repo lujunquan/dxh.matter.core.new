@@ -29,8 +29,8 @@ jobs:
       - name: Core unit tests
         run: CXX=clang++ ./scripts/test.sh
 
-  # A full Matter build needs the connectedhomeip checkout, initialized
-  # submodules and the Pigweed CIPD environment (multi-GB). Run it on a
+  # A full Matter build needs the connectedhomeip submodule (plus its own
+  # submodules) and the Pigweed CIPD environment (multi-GB). Run it on a
   # self-hosted runner with a prepared SDK instead of bootstrapping it on every
   # public CI run.
   matter-build:
@@ -39,10 +39,10 @@ jobs:
     runs-on: [self-hosted, linux, matter-sdk]
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Build
-        env:
-          MATTER_SDK_ROOT: ${{ vars.MATTER_SDK_ROOT }}
         run: ./scripts/build.sh
 
       - name: Unit tests

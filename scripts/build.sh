@@ -36,6 +36,9 @@ SDK_ROOT="$(cd "${ROOT}/third_party/connectedhomeip" && pwd -P)"
 
 # Provides gn, ninja, zap and the host toolchain used by the Matter build.
 # activate.sh is not nounset-safe, so relax `set -u` while sourcing it.
+# It also runs `git submodule status` relative to the current directory, so
+# enter the SDK first and return to the project afterwards.
+cd "${SDK_ROOT}"
 set +u
 # shellcheck disable=SC1090
 source "${SDK_ROOT}/scripts/activate.sh" >/dev/null
