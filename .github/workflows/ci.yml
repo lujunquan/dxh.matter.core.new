@@ -1,0 +1,49 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+
+jobs:
+  core-tests:
+    name: SDK-independent core tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang shellcheck
+
+      - name: Shell script syntax
+        run: |
+          for script in scripts/*.sh; do
+            bash -n "${script}"
+          done
+
+      - name: Shellcheck
+        run: shellcheck -S warning scripts/*.sh
+
+      - name: Core unit tests
+        run: CXX=clang++ ./scripts/test.sh
+
+  # A full Matter build needs the connectedhomeip checkout, initialized
+  # submodules and the Pigweed CIPD environment (multi-GB). Run it on a
+  # self-hosted runner with a prepared SDK instead of bootstrapping it on every
+  # public CI run.
+  matter-build:
+    name: Matter bridge build (self-hosted)
+    if: github.repository_owner != 'github'
+    runs-on: [self-hosted, linux, matter-sdk]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        env:
+          MATTER_SDK_ROOT: ${{ vars.MATTER_SDK_ROOT }}
+        run: ./scripts/build.sh
+
+      - name: Unit tests
+        run: ./scripts/test.sh

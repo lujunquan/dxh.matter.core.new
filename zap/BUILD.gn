@@ -1,0 +1,17 @@
+# Copyright (c) 2026 DUWI Matter Bridge Authors
+# SPDX-License-Identifier: Apache-2.0
+
+import("//build_overrides/chip.gni")
+
+import("${chip_root}/src/app/chip_data_model.gni")
+
+chip_data_model("dxh-bridge-data-model") {
+  zap_file = "dxh-bridge.zap"
+
+  is_server = true
+
+  # Generated attribute-storage code uses this when sizing dynamic endpoint
+  # storage. Keep in sync with CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT in
+  # config/CHIPProjectAppConfig.h.
+  cflags = [ "-DDYNAMIC_ENDPOINT_COUNT=16" ]
+}

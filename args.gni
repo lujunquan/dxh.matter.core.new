@@ -1,0 +1,22 @@
+# Copyright (c) 2026 DUWI Matter Bridge Authors
+# SPDX-License-Identifier: Apache-2.0
+
+import("//build_overrides/chip.gni")
+
+import("${chip_root}/config/standalone/args.gni")
+
+# The application configuration header is injected into every translation unit
+# by the CHIP build. Keep it under //config so it is easy to review.
+chip_device_project_config_include = "<CHIPProjectAppConfig.h>"
+chip_project_config_include = "<CHIPProjectAppConfig.h>"
+chip_system_project_config_include = "<SystemProjectConfig.h>"
+
+chip_project_config_include_dirs = [ "//config" ]
+chip_project_config_include_dirs += [ "${chip_root}/config/standalone" ]
+
+# Trace support is required for --trace-to on the command line.
+matter_enable_tracing_support = true
+
+# Enable endpoint unique IDs on dynamic bridged endpoints. The bridge derives
+# them deterministically from (adapter name, physical device id).
+chip_enable_endpoint_unique_id = true

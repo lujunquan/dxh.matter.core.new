@@ -1,0 +1,20 @@
+# Copyright (c) 2026 DUWI Matter Bridge Authors
+# SPDX-License-Identifier: Apache-2.0
+#
+# GN source root for the out-of-tree DUWI Matter Bridge.
+#
+# `build_overrides/` and `third_party/connectedhomeip` are symlinks created by
+# scripts/setup.sh. They resolve `build_root` and `chip_root` into the external,
+# read-only connectedhomeip checkout, so the SDK tree is never modified.
+
+import("//build_overrides/build.gni")
+
+# The location of the build configuration file.
+buildconfig = "${build_root}/config/BUILDCONFIG.gn"
+
+# CHIP uses angle bracket includes.
+check_system_includes = true
+
+default_args = {
+  import("//args.gni")
+}

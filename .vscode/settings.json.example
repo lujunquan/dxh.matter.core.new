@@ -1,0 +1,20 @@
+{
+  "files.associations": {
+    "*.gn": "gn",
+    "*.gni": "gn"
+  },
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}/out/debug",
+    "--background-index",
+    "--header-insertion=never"
+  ],
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "search.exclude": {
+    "out/**": true,
+    "third_party/connectedhomeip/**": true
+  },
+  "files.watcherExclude": {
+    "out/**": true,
+    "third_party/connectedhomeip/**": true
+  }
+}

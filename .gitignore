@@ -1,0 +1,35 @@
+# Build outputs
+/out/
+compile_commands.json
+
+# Created by scripts/setup.sh (machine-specific SDK location)
+/build_overrides
+/third_party/connectedhomeip
+
+# Generated data model artifacts
+# NOTE: zap/*.matter is an input to codegen (not generated during the build),
+# so it is committed together with zap/*.zap.
+/zzz_generated/
+/zap_gen.lock
+
+# Local logs / runtime state
+/logs/
+*.kvs
+
+# Local editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/settings.json.example
+!.vscode/launch.json.example
+*.swp
+*~
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Local environment overrides
+.env
+.env.local

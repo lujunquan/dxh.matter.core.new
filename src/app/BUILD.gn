@@ -1,0 +1,46 @@
+# Copyright (c) 2026 DUWI Matter Bridge Authors
+# SPDX-License-Identifier: Apache-2.0
+
+import("//build_overrides/chip.gni")
+
+import("${chip_root}/build/chip/tools.gni")
+
+assert(chip_build_tools)
+
+executable("dxh-matter-bridge") {
+  sources = [
+    "../adapters/IDeviceAdapter.h",
+    "../adapters/MockDeviceAdapter.cpp",
+    "../adapters/MockDeviceAdapter.h",
+    "../bridge/BridgeEndpointManager.cpp",
+    "../bridge/BridgeEndpointManager.h",
+    "../bridge/BridgedAttributeAccess.cpp",
+    "../bridge/BridgedAttributeAccess.h",
+    "../bridge/BridgedDevice.cpp",
+    "../bridge/BridgedDevice.h",
+    "../bridge/StableId.cpp",
+    "../bridge/StableId.h",
+    "../model/DeviceTypes.h",
+    "BridgeApplication.cpp",
+    "BridgeApplication.h",
+    "main.cpp",
+  ]
+
+  # Allows includes like "bridge/BridgedDevice.h" and "model/DeviceTypes.h".
+  include_dirs = [ ".." ]
+
+  cflags = [ "-Wconversion" ]
+
+  deps = [
+    # Addressed through the SDK examples namespace because GN visibility rules
+    # only allow ${chip_root}/examples/* to depend on codegen targets.
+    # scripts/setup.sh creates the <sdk>/examples/dxh-matter-core symlink.
+    "${chip_root}/examples/dxh-matter-core/zap:dxh-bridge-data-model",
+    "${chip_root}/examples/platform/linux:app-main",
+    "${chip_root}/src/app/clusters/basic-information",
+    "${chip_root}/src/app/clusters/bridged-device-basic-information-server",
+    "${chip_root}/src/lib",
+  ]
+
+  output_dir = root_out_dir
+}

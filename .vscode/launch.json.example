@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug dxh-matter-bridge",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/debug/dxh-matter-bridge",
+      "args": [
+        "--discriminator",
+        "1234",
+        "--passcode",
+        "20202021",
+        "--KVS",
+        "/tmp/dxh-matter-bridge.kvs",
+        "--trace-to",
+        "json:/tmp/dxh.trace.json"
+      ],
+      "cwd": "${workspaceFolder}",
+      "terminal": "integrated"
+    }
+  ]
+}
