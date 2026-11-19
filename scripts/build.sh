@@ -59,5 +59,15 @@ fi
 gn gen "${OUT_DIR}" ${GN_ARGS[@]+"${GN_ARGS[@]}"}
 ninja -C "${OUT_DIR}" ${NINJA_ARGS[@]+"${NINJA_ARGS[@]}"}
 
+# Darwin's linker does not embed DWARF into the executable, so lldb (and thus
+# VS Code / CodeLLDB) cannot resolve source-line breakpoints unless a companion
+# .dSYM sits next to the binary. Ninja keeps the object files around, so this
+# step is cheap and idempotent. ELF platforms need no equivalent.
+if [[ "$(uname -s)" == "Darwin" && -f "${OUT_DIR}/dxh-matter-bridge" ]]; then
+    if ! dsymutil "${OUT_DIR}/dxh-matter-bridge" -o "${OUT_DIR}/dxh-matter-bridge.dSYM"; then
+        echo "warning: dsymutil failed; source-line breakpoints may not resolve" >&2
+    fi
+fi
+
 echo
 echo "Built: ${ROOT}/${OUT_DIR}/dxh-matter-bridge"

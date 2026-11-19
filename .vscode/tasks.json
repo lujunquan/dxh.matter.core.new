@@ -1,0 +1,64 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build (debug)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/build.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "generate compile_commands.json",
+      "detail": "生成 out/debug/compile_commands.json 供 clangd 使用；改 ZAP 或增删源文件后重跑",
+      "type": "shell",
+      "command": "bash -c 'set +u; source \"$(cd third_party/connectedhomeip && pwd -P)/scripts/activate.sh\" >/dev/null; set -u; gn gen out/debug --export-compile-commands'",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "build core tests",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/test.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "test",
+      "problemMatcher": ["$gcc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "clear debug KVS",
+      "detail": "删除 /tmp/dxh-matter-bridge.kvs；重新配网前必须执行，否则设备已入网会配对失败",
+      "type": "shell",
+      "command": "rm -f /tmp/dxh-matter-bridge.kvs",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "build + clear debug KVS",
+      "dependsOrder": "sequence",
+      "dependsOn": ["clear debug KVS", "build (debug)"],
+      "problemMatcher": []
+    }
+  ]
+}

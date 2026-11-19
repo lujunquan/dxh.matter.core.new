@@ -1,0 +1,53 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug dxh-matter-bridge",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/debug/dxh-matter-bridge",
+      "args": [
+        "--discriminator",
+        "1234",
+        "--passcode",
+        "20202021",
+        "--KVS",
+        "/tmp/dxh-matter-bridge.kvs",
+        "--trace-to",
+        "json:/tmp/dxh.trace.json"
+      ],
+      "cwd": "${workspaceFolder}",
+      "terminal": "integrated",
+      "preLaunchTask": "build (debug)",
+      "stopOnEntry": false
+    },
+    {
+      "name": "Debug dxh-matter-bridge (fresh KVS)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/debug/dxh-matter-bridge",
+      "args": [
+        "--discriminator",
+        "1234",
+        "--passcode",
+        "20202021",
+        "--KVS",
+        "/tmp/dxh-matter-bridge.kvs"
+      ],
+      "cwd": "${workspaceFolder}",
+      "terminal": "integrated",
+      "preLaunchTask": "build + clear debug KVS",
+      "stopOnEntry": false
+    },
+    {
+      "name": "Debug core tests",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/tests/dxh-core-tests",
+      "cwd": "${workspaceFolder}",
+      "terminal": "integrated",
+      "preLaunchTask": "build core tests",
+      "stopOnEntry": false
+    }
+  ]
+}

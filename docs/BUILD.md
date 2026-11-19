@@ -143,8 +143,8 @@ $CT pairing onnetwork 1 20202021
 $CT descriptor read parts-list 1 0
 $CT onoff read on-off 1 3
 $CT onoff toggle 1 3
-$CT temperaturemeasurement read measured-value 1 4
-$CT bridgeddevicebasicinformation read reachable 1 4
+$CT temperaturemeasurement read measured-value 1 5
+$CT bridgeddevicebasicinformation read reachable 1 5
 ```
 
 macOS 使用 on-network 配网。`--ble-controller` 仅在 SDK 的 Linux/BlueZ 平台层
@@ -158,9 +158,19 @@ macOS 使用 on-network 配网。`--ble-controller` 仅在 SDK 的 Linux/BlueZ �
 |---|---|
 | 交互模型 trace | `./scripts/run.sh --trace-to json:/tmp/dxh.trace.json` |
 | lldb | `lldb out/debug/dxh-matter-bridge` |
+| VS Code 调试 | 装 CodeLLDB 扩展后直接按 F5；配置见 `.vscode/launch.json`、`.vscode/tasks.json` |
 | ASan | `DXH_OUT_DIR=out/asan DXH_GN_ARGS='is_asan=true' ./scripts/build.sh` |
 | 编译命令 | `ninja -C out/debug -v` |
 | 生成代码位置 | `out/debug/gen/third_party/connectedhomeip/examples/dxh-matter-core/zap/zapgen/` |
+
+macOS 的 Darwin 链接器不会把 DWARF 合并进可执行文件，所以 `build.sh` 在
+`ninja` 之后会调用 `dsymutil` 生成 `out/debug/dxh-matter-bridge.dSYM`。它与二进制
+同名同目录，lldb / CodeLLDB 会自动发现；没有它时断点会停在“未解析”状态（空心
+圆），程序照常运行。直接 `ninja` 而不走 `build.sh` 不会生成，需要手动：
+
+```bash
+dsymutil out/debug/dxh-matter-bridge -o out/debug/dxh-matter-bridge.dSYM
+```
 
 常见问题：
 
@@ -206,7 +216,7 @@ git push origin <tag-or-commit>   # 让 fork 也包含该提交/标签
 升级后重点验证：
 
 1. `BridgedDevice.cpp` 中 BDBI cluster 的 `MutableData` / `FixedData` / `Context`
-2. `emberAfSetDynamicEndpointWithEpUniqueID` 的参数
+2. `emberAfSetDynamicEndpointWithEpUniqueId` 的参数
 3. `DECLARE_DYNAMIC_*` 宏生成的属性元数据
 4. `zap/` 重新生成后 cluster revision 是否变化
 
