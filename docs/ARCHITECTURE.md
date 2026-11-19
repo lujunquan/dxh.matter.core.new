@@ -175,6 +175,6 @@ main()
 后续 SDK 升级时，重点核对：
 
 - `BridgedDeviceBasicInformationCluster` 的 `MutableData` / `FixedData` / `Context`
-- `emberAfSetDynamicEndpointWithEpUniqueID` 签名
+- `emberAfSetDynamicEndpointWithEpUniqueId` 签名
 - `DECLARE_DYNAMIC_*` 宏
 - `ServerClusterInterfaceRegistry::Register/Unregister`

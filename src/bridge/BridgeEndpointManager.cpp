@@ -171,6 +171,7 @@ int BridgeEndpointManager::AddDevice(BridgedDevice * device)
     VerifyOrReturnValue(clusterCount <= kMaxClustersPerEndpoint, -1);
 
     const Span<DataVersion> dataVersions(mDataVersions[slot], clusterCount);
+    const EndpointId lastDynamicEndpoint = static_cast<EndpointId>(mFirstDynamicEndpoint + kMaxDevices - 1);
 
     while (true)
     {
@@ -213,9 +214,9 @@ int BridgeEndpointManager::AddDevice(BridgedDevice * device)
             return -1;
         }
 
-        // Endpoint id already used (for example by a fixed endpoint). Wrap
-        // around the dynamic range.
-        if (++mNextEndpointId < mFirstDynamicEndpoint)
+        // Endpoint id already used (for example by a previously added device).
+        // Advance within the dynamic range and wrap around at its end.
+        if (++mNextEndpointId > lastDynamicEndpoint)
         {
             mNextEndpointId = mFirstDynamicEndpoint;
         }

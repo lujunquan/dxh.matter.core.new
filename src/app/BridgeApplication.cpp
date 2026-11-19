@@ -9,6 +9,7 @@
 
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
+#include <app/clusters/temperature-measurement-server/CodegenIntegration.h>
 #include <app/reporting/reporting.h>
 #include <lib/support/CHIPMem.h>
 #include <lib/support/CodeUtils.h>
@@ -115,6 +116,19 @@ void BridgeApplication::AddDiscoveredDevices()
             continue;
         }
 
+        // The cluster only exists after the endpoint has been created, so the
+        // measured range and initial value are pushed once AddDevice() has
+        // succeeded. Setting them explicitly keeps the code-driven cluster in
+        // sync with the adapter snapshot (the external attribute callback is
+        // not consulted for code-driven cluster reads).
+        if (descriptor.kind == model::DeviceKind::kTemperatureSensor)
+        {
+            auto & sensor = static_cast<bridge::BridgedTemperatureSensor &>(*device);
+            LogErrorOnFailure(TemperatureMeasurement::SetMeasuredValueRange(
+                sensor.GetEndpointId(), sensor.GetMinMeasuredValue(), sensor.GetMaxMeasuredValue()));
+            LogErrorOnFailure(TemperatureMeasurement::SetMeasuredValue(sensor.GetEndpointId(), sensor.GetMeasuredValue()));
+        }
+
         mDevicesByPhysicalId.emplace(device->GetPhysicalId(), device.get());
         mDevices.push_back(std::move(device));
     }
@@ -128,8 +142,11 @@ std::unique_ptr<bridge::BridgedDevice> BridgeApplication::CreateDevice(const mod
     {
         auto device = std::make_unique<bridge::BridgedTemperatureSensor>(descriptor, uniqueId);
         device->SetChangedCallback([](bridge::BridgedTemperatureSensor & sensor) {
-            MatterReportingAttributeChangeCallback(sensor.GetEndpointId(), TemperatureMeasurement::Id,
-                                                   TemperatureMeasurement::Attributes::MeasuredValue::Id);
+            // TemperatureMeasurement is a code-driven cluster in the SDK, so
+            // reads and reports are served from the cluster's own state rather
+            // than from the external attribute callback. Updating it through
+            // SetMeasuredValue() also triggers the attribute change report.
+            LogErrorOnFailure(TemperatureMeasurement::SetMeasuredValue(sensor.GetEndpointId(), sensor.GetMeasuredValue()));
         });
         return device;
     }

@@ -158,9 +158,9 @@ $CT descriptor read device-type-list 1 3
 
 $CT onoff read on-off 1 3
 $CT onoff toggle 1 3
-$CT temperaturemeasurement read measured-value 1 4
-$CT bridgeddevicebasicinformation read reachable 1 4
-$CT bridgeddevicebasicinformation subscribe reachable 1 4 1 10
+$CT temperaturemeasurement read measured-value 1 5
+$CT bridgeddevicebasicinformation read reachable 1 5
+$CT bridgeddevicebasicinformation subscribe reachable 1 5 1 10
 ```
 
 当前 Mock 设备：
