@@ -1,6 +1,8 @@
 # 架构说明
 
 本文描述 `dxh.matter.core.new` 的分层、数据流、线程模型和不可破坏的约束。
+代码级细节（逐模块说明、开发配方、任务清单）见
+[DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md)。
 
 ---
 

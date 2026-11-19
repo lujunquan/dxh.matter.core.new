@@ -62,7 +62,8 @@ Apple Home、Google Home、Alexa、Home Assistant 等控制器。
 - 设备状态变化的唯一来源是适配器；Matter 写命令也会转发给适配器，等待适配器
   回报状态后再更新 Matter 属性。
 
-详见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
+概览见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，逐模块说明、运行时流程和
+开发配方见 [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)。
 
 ---
 
@@ -96,6 +97,7 @@ dxh.matter.core.new/
 │   └── connectedhomeip     Matter SDK 子模块（lujunquan/connectedhomeip fork）
 ├── docs/
 │   ├── ARCHITECTURE.md
+│   ├── DEVELOPER_GUIDE.md    代码级架构、运行时流程、开发配方
 │   ├── BUILD.md
 │   └── ADAPTER_GUIDE.md
 └── out/                    构建输出（已 gitignore）
