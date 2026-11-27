@@ -104,7 +104,7 @@ main()
 | 0 | root device | SDK 必需 |
 | 1 | Aggregator | 所有桥接设备的 parent endpoint |
 | 2 | ZAP placeholder | 包含动态 endpoint 所需的全部 cluster；运行时被禁用 |
-| 3..18 | 动态 | `CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT = 16` |
+| 3..257 | 动态 | `CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT = 255` |
 
 动态 endpoint 的 DeviceTypeList：
 

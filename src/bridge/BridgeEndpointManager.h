@@ -22,6 +22,10 @@ namespace dxh::bridge {
 class BridgeEndpointManager
 {
 public:
+    // uint8_t caps the configurable limit at 255; widen this type and the
+    // slot loops in the .cpp if more simultaneous devices are required.
+    static_assert(CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT <= 255,
+                  "kMaxDevices is uint8_t; widen it and the slot loops to exceed 255");
     static constexpr uint8_t kMaxDevices             = CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT;
     static constexpr uint8_t kMaxClustersPerEndpoint = 4;
 

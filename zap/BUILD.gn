@@ -13,5 +13,5 @@ chip_data_model("dxh-bridge-data-model") {
   # Generated attribute-storage code uses this when sizing dynamic endpoint
   # storage. Keep in sync with CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT in
   # config/CHIPProjectAppConfig.h.
-  cflags = [ "-DDYNAMIC_ENDPOINT_COUNT=16" ]
+  cflags = [ "-DDYNAMIC_ENDPOINT_COUNT=255" ]
 }

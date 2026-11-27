@@ -267,11 +267,11 @@ BridgedDevice                     BDBI delegate + 设备元数据
 单例，负责动态 endpoint 的槽位与 endpoint id。
 
 ```cpp
-kMaxDevices             = CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT   // 16
+kMaxDevices             = CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT   // 255
 kMaxClustersPerEndpoint = 4
 kAggregatorEndpointId   = 1
-mDevices[16]            // slot -> BridgedDevice*
-mDataVersions[16][4]    // 每个 slot 每个 cluster 的 DataVersion
+mDevices[255]           // slot -> BridgedDevice*
+mDataVersions[255][4]   // 每个 slot 每个 cluster 的 DataVersion
 mFirstDynamicEndpoint   // = fixedEndpointCount（当前为 3）
 ```
 
@@ -282,7 +282,7 @@ mFirstDynamicEndpoint   // = fixedEndpointCount（当前为 3）
   2. 按 `DeviceKind` 选 `EmberAfEndpointType`、device type 列表、cluster 数量；
   3. 从 `mNextEndpointId` 开始尝试 `emberAfSetDynamicEndpointWithEpUniqueId`
      （或非 UniqueID 版本）；
-  4. 若返回 `CHIP_ERROR_ENDPOINT_EXISTS`，在 3..18 内循环找下一个 id；
+  4. 若返回 `CHIP_ERROR_ENDPOINT_EXISTS`，在 3..257 内循环找下一个 id；
   5. 成功后记录 slot，并**在端点存在之后**注册 BDBI cluster；
   6. 返回 slot；失败返回 -1。
 - `RemoveDevice()`：`device->Unregister()` → `emberAfClearDynamicEndpoint(slot)`
@@ -382,7 +382,7 @@ stdin 在独立线程读取，通过 `SystemLayer().ScheduleLambda` 投递到 Ma
 | 0 | Root device，19 个 cluster（Descriptor、AccessControl、BasicInformation、网络/诊断、OperationalCredentials…） | 正常 |
 | 1 | Aggregator：`Identify` + `Descriptor` | 正常；所有桥接设备的 parent |
 | 2 | ZAP **placeholder**：`OnOff`、`LevelControl`、`Descriptor`、`Switch`、`TemperatureMeasurement` | **启动后被禁用**，仅用于生成 cluster 实现 |
-| 3..18 | 动态 endpoint（16 个） | 运行时按发现结果创建 |
+| 3..257 | 动态 endpoint（255 个） | 运行时按发现结果创建 |
 
 为什么需要 placeholder：`DECLARE_DYNAMIC_CLUSTER` 只提供属性元数据，cluster 的
 实现和回调注册由 codegen 根据固定 endpoint 生成。动态 endpoint 用到的每个

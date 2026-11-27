@@ -7,7 +7,9 @@
 
 // Number of dynamic bridged endpoints that can exist at the same time.
 // Keep in sync with DYNAMIC_ENDPOINT_COUNT in zap/BUILD.gn.
-#define CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT 16
+// 255 is the maximum for the current uint8_t kMaxDevices in
+// BridgeEndpointManager; widen that type (and its slot loops) to go higher.
+#define CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT 255
 
 // Current values are the CSA test vendor/product IDs. They are fine for
 // development and certification dry-runs only. Replace them with the IDs

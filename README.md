@@ -154,7 +154,7 @@ CT=third_party/connectedhomeip/out/darwin-arm64-chip-tool-clang/chip-tool
 
 $CT pairing onnetwork 1 20202021
 
-# endpoint 0 的 parts-list 展示真实拓扑（固定 0/1/2 + 动态 3..18）
+# endpoint 0 的 parts-list 展示真实拓扑（固定 0/1/2 + 动态 3..257）
 $CT descriptor read parts-list 1 0
 $CT descriptor read device-type-list 1 3
 
@@ -236,7 +236,7 @@ $CT bridgeddevicebasicinformation subscribe reachable 1 5 1 10
   - `2`：ZAP placeholder，运行时被禁用；**所有动态 endpoint 用到的 cluster
     必须同时出现在这里**
 - 动态 endpoint 从 `3` 开始，最多
-  `CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT`（16）个。
+  `CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT`（255）个。
 
 修改数据模型的流程见 [zap/README.md](zap/README.md)。
 
